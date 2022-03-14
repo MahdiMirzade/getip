@@ -31,7 +31,6 @@ $ getip v
 [![getip usage gif](https://raw.githubusercontent.com/MahdyMirzade/MahdyMirzade/main/assets/getip/usage.gif)](https://asciinema.org/a/427949)
 
 ## Methods
-
 **Table of methods:**
 
 | Method | Description |
