@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+
+# Ctrl-c handler
+ctrlc () {
+    echo ""
+    echo "You have requested a cancellation, Exiting program..."
+    exit 2
+}
+trap "ctrlc" 2
+trap "" TSTP
+
+# getip's version/copyright
+GETIP_VERSION="1.0.2"
+GETIP_COPYRIGHT="Copyright (C) 2021 Mahdy Mirzade"
+
+# Handle arguments
+filename="$0"
+subcommand="${1,,}"
+subcommand=${subcommand//-/}
+
+# Grab public IP address
+publicIP () {
+    RESOLVERS='@resolver1.opendns.com @resolver2.opendns.com @resolver3.opendns.com @resolver4.opendns.com'
+    for resolver in $RESOLVERS ; do
+        PUBLIC_IP="$(dog --short myip.opendns.com "$resolver")"
+        if [[ -n "$PUBLIC_IP" ]]; then
+            break
+        fi
+    done
+}
+
+# Grab private IP address
+privateIP () {
+    if [[ "$(uname)" == "Darwin" ]]; then
+        PRIVATE_IP=$(ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}')
+    elif [[ "$(expr substr $(uname -s) 1 5)" == "Linux" ]]; then
+        PRIVATE_IP=$(ip address | grep 'inet ' | grep 'scope global' | grep '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' -o | head -1)
+    fi
+}
+
+# Grab IP's geolocation information
+geolocation () {
+    publicIP
+    curl -s http://ipwhois.app/json/$PUBLIC_IP
+}
+
+# Grab usage manual
+usage () {
+    USAGE=$(cat <<EOF
+Usage: $filename [METHOD]
+    
+General Methods:
+    h,  help            Show this manual
+    v,  version         Show version number
+
+IP Information Methods:
+    pub,    public      Get Your Public IP Address
+    priv,   private     Get Your Private IP Address
+    j,      json        Get Your Public IP's Full Information in Json
+
+Other methods can be also grabbed from json output,
+    for example this is your json output:
+    \e[1;34m{
+        ...
+        "continent": "Europe",
+        "country": "Germany",
+        "region": "Bavaria",
+        "city": "Nuremberg",
+        "latitude": 49.4254092,
+        "longitude": 11.0796553,
+        ...
+    }\e[0m
+    and if you want to get IP's country:
+    \e[1;34m$ $filename country
+    Output: Germany\e[0m
+
+Full info: https://mahdymirzade.github.io/getip
+EOF
+)
+    echo -e "$USAGE"
+}
+
+version () {
+    cat <<EOF
+            _   _
+  __ _  ___| |_(_)_ __      getip (Geolocation, Private/Public IP) v$GETIP_VERSION
+ / _\` |/ _ \ __| | '_ \     $GETIP_COPYRIGHT
+| (_| |  __/ |_| | |_) |
+ \__, |\___|\__|_| .__/     This program may be freely redistributed under
+ |___/           |_|        the terms of the GNU General Public License.
+
+EOF
+}
+
+case $subcommand in
+    private | priv)
+        privateIP
+        echo $PRIVATE_IP
+    ;;
+    public | pub)
+        publicIP
+        echo $PUBLIC_IP
+    ;;
+    json | j)
+       geolocation | jq
+    ;;
+    version | v)
+        version
+    ;;
+    help | h)
+        usage
+    ;;
+    *)
+        if [[ -n $subcommand ]]; then
+            data=$(geolocation)
+            var=$(echo $data | jq ".${subcommand}")
+            var=${var//\"/}
+        fi
+        if [[ -n $var && $var != "null" ]]; then
+            echo $var
+        else
+            usage
+        fi
+    ;;
+esac
+
