@@ -147,12 +147,3 @@ Full info: https://mahdymirzade.github.io/getip
 
 </details>
   
-## Team ![GitHub contributors](https://img.shields.io/github/contributors/mahdymirzade/getip)
-This project is maintained by the following people and a bunch of [awesome contributors](https://github.com/MahdyMirzade/getip/graphs/contributors).
-
-| [![Mahdy Mirzade](https://github.com/mahdymirzade.png?size=100)](https://github.com/mahdymirzade) |
-| --- |
-| [Mahdy Mirzade](https://github.com/mahdymirzade) |
-
-## Donate
-You can use [this page](https://git.io/JB2BO) to find more about supporting this project.
