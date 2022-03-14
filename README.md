@@ -2,7 +2,6 @@
 📱 Get Private/Public IP &amp; IP's Geolocation.
 
 ## Installation
-
 getip can be installed manually or using AUR.
 
 ### AUR [![AUR version](https://img.shields.io/aur/version/getip)](https://aur.archlinux.org/packages/getip) [![AUR votes](https://img.shields.io/aur/votes/getip)](https://aur.archlinux.org/packages/getip)
