@@ -1,0 +1,36 @@
+getip
+-----
+Get Private/Public IP/IP's Geolocation.
+
+Installation
+------------
+You can install getip with ArchLinux User Repository.
+
+With AUR Helper:
+    yay -S getip
+
+Without Helpers:
+    git clone https://aur.archlinux.org/getip.git
+    cd getip
+    makepkg -si
+
+Manual Installation
+-------------------
+    git clone https://github.com/MahdyMirzade/getip.git
+    cp getip/getip /usr/bin
+    getip v
+> You may need to run some of these commands with root permissions. (doas)
+
+Demo
+----
+https://asciinema.org/a/427949
+
+Methods
+-------
+| Method            | Description                                   |
+| ----------------- | --------------------------------------------- |
+| help (h)          | Show getip's help manual                      |
+| version (v)       | Show getip's version number                   |
+| public (pub)      | Show your public IP address                   |
+| private (priv)    | Show your private IP address                  |
+| json (j)          | Show you public IP's full information in Json |
